@@ -1,23 +1,21 @@
-NAME	= libft.a
+NAME	= libftprintf.a
 FLAG	= -Wall -Werror -Wextra -std=c99 -I. -c
-SRC		= src/*.c
-			
-OBJ		= $(SRC:.c=.o)
+
+PATH_SRC = ./src/
+SRC = $(PATH_SRC)*.c
+OBJ = *.o
+OBJ_PATH = ./obj/$(OBJ)
 
 all: $(NAME)
 
-$(NAME): $(OBJ)
-	ar rcs $(NAME) obj/*.o
-	
-$(OBJ): $(SRC)
+$(NAME):
 	@mkdir -p obj
 	@cd obj/; gcc $(FLAG) ../$(SRC); cd ..
-	
+	@ar rc $(NAME) $(OBJ_PATH)
+
 clean:
-	rm -f $(OBJ)
-	rm -f $(SRC)
-	
+	@/bin/rm -f ./obj/$(OBJ)
 fclean: clean
-	rm -f $(NAME)
-	
+	@/bin/rm -f $(NAME)
+
 re: fclean all

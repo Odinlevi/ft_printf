@@ -41,7 +41,6 @@ void	ft_putnchar(unsigned char *f, int size)
 	i = 0;
 	while (i != size)
 	{
-		//write(1, &f[i], 1);
 		ft_putchar(f[i]);
 		i++;
 	}

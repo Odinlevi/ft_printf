@@ -12,31 +12,22 @@
 
 #include "libftprintf.h"
 
-char			*ft_strtrim(char const *s)
+char	*ft_strtrim(char const *s)
 {
-	char	*result;
-	int		b;
-	int		e;
-	int		mode;
+	char	*str;
+	size_t	i;
 
-	if ((s == NULL))
+	if (!s)
 		return (NULL);
-	e = ft_strlen(s);
-	mode = -1;
-	b = 0;
-	if ((result = (char*)malloc((sizeof(*result)) * e + 1)))
-	{
-		while ((s[b] == ' ' || s[b] == '\t' || s[b] == '\n') && s[b] != '\0')
-			b++;
-		while (s[e] == ' ' || s[e] == '\t' || s[e] == '\n' || s[e] == '\0')
-			e--;
-		while (b <= e)
-		{
-			result[++mode] = s[b];
-			b++;
-		}
-		result[++mode] = '\0';
-		return (result);
-	}
-	return (NULL);
+	i = ft_strlen(s);
+	if (s)
+		if ((str = (char*)malloc(sizeof(char) * (i + 1))) == NULL)
+			return (NULL);
+	while (*s == ' ' || *s == '\n' || *s == '\t')
+		s++;
+	str = ft_strcpy(str, s);
+	i = ft_strlen(str);
+	while (str[i - 1] == ' ' || str[i - 1] == '\n' || str[i - 1] == '\t')
+		str[--i] = '\0';
+	return (str);
 }

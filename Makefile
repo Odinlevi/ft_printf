@@ -1,5 +1,5 @@
 NAME	= libftprintf.a
-FLAG	= -Wall -Werror -Wextra -std=c99 -I. -c
+FLAG	= -Werror -Wall -Wextra -std=c99 -I. -c
 
 PATH_SRC = ./src/
 SRC = $(PATH_SRC)*.c

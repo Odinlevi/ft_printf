@@ -24,12 +24,12 @@ void	print_char(t_flags *flags, va_list list, int *i)
 		if (flags->min_size - 1 > 0)
 			fill_it(flags, flags->min_size - 1);
 		if (c >= 0 && c <= 255)
-			ft_putchar((char)c);
+			ft_putchar(c);
 	}
 	else
 	{
 		if (c >= 0 && c <= 255)
-			ft_putchar((char)c);
+			ft_putchar(c);
 		if (flags->min_size - 1 > 0)
 			fill_it(flags, flags->min_size - 1);
 	}

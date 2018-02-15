@@ -8,6 +8,7 @@
 # define OXMIN	("0x000000000000")
 # include <stdlib.h>
 # include <unistd.h>
+typedef int		t_wint;
 
 typedef struct		s_list
 {
@@ -35,8 +36,9 @@ int					ft_isascii(int c);
 int					ft_isdigit(int c);
 int					ft_isprint(int c);
 char				*ft_itoa(int n);
-void				ft_putchar(char c);
-void				ft_putchar_fd(int c, int fd);
+void				ft_putchar(t_wint c);
+void				ft_putchar_fd(t_wint c, int fd);
+void				ft_putchar_fd_x(t_wint c, int fd);
 void				ft_putendl(char const *s);
 void				ft_putendl_fd(char const *s, int fd);
 void				ft_putnbr(int n);

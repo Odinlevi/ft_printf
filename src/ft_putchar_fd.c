@@ -12,59 +12,31 @@
 
 #include "libftprintf.h"
 
-static int nbr_bits(unsigned int nbr)
+void	ft_putchar_fd(t_wint c, int fd)
 {
-int i;
-
-i = 1;
-while (nbr >> 1)
-{
-nbr = nbr >> 1;
-i++;
-}
-return (i);
-}
-
-static void norm_25ln(char *buff, int *i, unsigned int ch)
-{
-buff[(*i)++] = ((ch >> 18) & 7) | 240;
-buff[(*i)++] = ((ch >> 12) & 63) | 128;
-}
-
-static void putwchart(int wchar, int *len, char *buff)
-{
-unsigned int ch;
-int n;
-int i;
-
-i = 0;
-ch = (unsigned int)wchar;
-n = nbr_bits(ch);
-if (n > 7 && ((*len += 1)))
-{
-if (n > 11 && ((*len += 1)))
-{
-if (n > 16 && ((*len += 2)))
-norm_25ln(buff, &i, ch);
-else if ((*len += 1))
-buff[i++] = ((ch >> 12) & 15) | 224;
-buff[i++] = ((ch >> 6) & 63) | 128;
-}
-else if ((*len += 1))
-buff[i++] = ((ch >> 6) & 31) | 192;
-buff[i++] = (ch & 63) | 128;
-}
-else if ((*len += 1))
-buff[i++] = ch;
+	if (c <= 0x7F)
+		ft_putchar_fd_x(c, fd);
+	else if (c <= 0x7FF)
+	{
+		ft_putchar_fd_x((c >> 6) + 0xC0, fd);
+		ft_putchar_fd_x((c & 0x3F) + 0x80, fd);
+	}
+	else if (c <= 0xFFFF)
+	{
+		ft_putchar_fd_x((c >> 12) + 0xE0, fd);
+		ft_putchar_fd_x(((c >> 6) & 0x3F) + 0x80, fd);
+		ft_putchar_fd_x((c & 0x3F) + 0x80, fd);
+	}
+	else if (c <= 0x10FFFF)
+	{
+		ft_putchar_fd_x((c >> 18) + 0xF0, fd);
+		ft_putchar_fd_x(((c >> 12) & 0x3F) + 0x80, fd);
+		ft_putchar_fd_x(((c >> 6) & 0x3F) + 0x80, fd);
+		ft_putchar_fd_x((c & 0x3F) + 0x80, fd);
+	}
 }
 
-void ft_putchar_fd(int c, int fd)
+void ft_putchar_fd_x(t_wint c, int fd)
 {
-  char buff2[10];
-  int len;
-
-  len = 0;
-  putwchart(c, &len, buff2);
-  buff2[len] = 0;
-  write(fd, buff2, len);
+  write(fd, &c, 1);
 }

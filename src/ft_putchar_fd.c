@@ -12,31 +12,72 @@
 
 #include "libftprintf.h"
 
-void	ft_putchar_fd(t_wint c, int fd)
+unsigned char	*threeand4bytesbufferfd(wchar_t c)
 {
-	if (c <= 0x7F)
-		ft_putchar_fd_x(c, fd);
-	else if (c <= 0x7FF)
+	unsigned char *buffer;
+
+	buffer = (unsigned char *)malloc(sizeof(char) * 5);
+	if (c <= 0xFFFF)
 	{
-		ft_putchar_fd_x((c >> 6) + 0xC0, fd);
-		ft_putchar_fd_x((c & 0x3F) + 0x80, fd);
+		buffer[3] = '\0';
+		buffer[2] = 0x80 | (c & 0x3F);
+		c = c >> 6;
+		buffer[1] = 0x80 | (c & 0x3F);
+		c = c >> 6;
+		buffer[0] = 0xE0 | c;
 	}
-	else if (c <= 0xFFFF)
+	else
 	{
-		ft_putchar_fd_x((c >> 12) + 0xE0, fd);
-		ft_putchar_fd_x(((c >> 6) & 0x3F) + 0x80, fd);
-		ft_putchar_fd_x((c & 0x3F) + 0x80, fd);
+		buffer[4] = '\0';
+		buffer[3] = 0x80 | (c & 0x3F);
+		c = c >> 6;
+		buffer[2] = 0x80 | (c & 0x3F);
+		c = c >> 6;
+		buffer[1] = 0x80 | (c & 0x3F);
+		c = c >> 6;
+		buffer[0] = 0xF0 | c;
 	}
-	else if (c <= 0x10FFFF)
-	{
-		ft_putchar_fd_x((c >> 18) + 0xF0, fd);
-		ft_putchar_fd_x(((c >> 12) & 0x3F) + 0x80, fd);
-		ft_putchar_fd_x(((c >> 6) & 0x3F) + 0x80, fd);
-		ft_putchar_fd_x((c & 0x3F) + 0x80, fd);
-	}
+	return (buffer);
 }
 
-void ft_putchar_fd_x(t_wint c, int fd)
+unsigned char	*wchartoutf8fd(wchar_t c)
 {
-  write(fd, &c, 1);
+	unsigned char *buffer;
+
+	buffer = (unsigned char *)malloc(sizeof(char) * 3);
+	if (c <= 0x7FF)
+	{
+		buffer[2] = '\0';
+		buffer[1] = 0x80 | (c & 0x3F);
+		c = c >> 6;
+		buffer[0] = c | 0xC0;
+	}
+	else
+	{
+		free(buffer);
+		buffer = threeand4bytesbufferfd(c);
+	}
+	return (buffer);
+}
+
+void			ft_putchar_fd(wchar_t c, int fd)
+{
+	int				i;
+	unsigned char	*buffer;
+
+	if (c <= 0x7F)
+	{
+		write(fd, &c, 1);
+	}
+	else
+	{
+		buffer = wchartoutf8fd(c);
+		i = 0;
+		while (buffer[i])
+		{
+			write(fd, &buffer[i], 1);
+			i++;
+		}
+	free(buffer);
+	}
 }
